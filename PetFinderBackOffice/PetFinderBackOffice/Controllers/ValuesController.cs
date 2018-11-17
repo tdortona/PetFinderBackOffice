@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using PetFinderBackOffice.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PetFinderBackOffice.Controllers
 {
+    [EnableCors("MyPolicy")]
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+        private readonly PetFinderDBContext context = new PetFinderDBContext();
+
         // GET: api/<controller>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -20,9 +25,19 @@ namespace PetFinderBackOffice.Controllers
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public Usuario Get(int id)
         {
-            return "value";
+            this.context.Usuario.Add(new Usuario()
+            {
+                Avatar = "",
+                Direccion = "Palacios 374",
+                Email = "tdortona@gmail.com",
+                Nombre = "Tomas"
+            });
+
+            this.context.SaveChanges();
+
+            return this.context.Usuario.LastOrDefault();
         }
 
         // POST api/<controller>

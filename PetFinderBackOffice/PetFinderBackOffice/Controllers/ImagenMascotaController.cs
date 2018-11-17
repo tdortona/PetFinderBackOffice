@@ -5,13 +5,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using IBM.WatsonDeveloperCloud.Util;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using PetFinderBackOffice.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PetFinderBackOffice.Controllers
 {
+    [EnableCors("MyPolicy")]
     [Route("api/[controller]")]
     public class ImagenMascotaController : Controller
     {
@@ -47,13 +50,6 @@ namespace PetFinderBackOffice.Controllers
             JObject jsonResult = JObject.Parse(result.ResponseJson);
 
             return this.Ok(result);
-        }
-
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
         }
 
         // POST api/<controller>
