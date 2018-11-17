@@ -1,62 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web;
-using System.Web.Http;
+using System.Threading.Tasks;
+using IBM.WatsonDeveloperCloud.Util;
+using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PetFinderBackOffice.Controllers
 {
-    public class ImagenMascotaController : ApiController
+    [Route("api/[controller]")]
+    public class ImagenMascotaController : Controller
     {
-        // GET api/<controller>
-        public IEnumerable<string> Get()
+        private const string versionDate = "2018-03-19";
+        private const string apikey = "HY_-KRN409tGl3X4Yp3zrbVxKpLGugfZ5HPr2gsCGMiC";
+        private const string endpoint = "https://gateway.watsonplatform.net/visual-recognition/api";
+
+        // GET: api/<controller>
+        [HttpGet]
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            List<string> classifierIds = new List<string>
+            {
+                "DogsBreed_2053415849"
+            };
+
+            VisualRecognitionService visualRecognition = new VisualRecognitionService();
+            visualRecognition.SetEndpoint(endpoint);
+            visualRecognition.VersionDate = "2018-03-19";
+
+            FileStream img;
+            img = new FileStream("C:\\Siena\\fran.jpg", FileMode.Open);
+
+            TokenOptions iamAssistantTokenOptions = new TokenOptions()
+            {
+                IamApiKey = apikey
+            };
+
+            visualRecognition.SetCredential(iamAssistantTokenOptions);
+            
+            var result = visualRecognition.Classify(img, classifierIds: classifierIds);
+
+            JObject jsonResult = JObject.Parse(result.ResponseJson);
+
+            return this.Ok(result);
         }
 
         // GET api/<controller>/5
+        [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
+        // POST api/<controller>
         [HttpPost]
-        [Route("api/ImagenMascota/FotoEncontrado")]
-        public HttpResponseMessage FotoEncontrado()
+        public void Post([FromBody]string value)
         {
-            var request = HttpContext.Current.Request;
- 
-            if (Request.Content.IsMimeMultipartContent())
-            {
-                if (request.Files.Count > 0)
-                {
-                    var postedFile = request.Files.Get("file");
-                    var title = request.Params["title"];
-                    string root = HttpContext.Current.Server.MapPath("~/Images");
-                    root = root + "/" + postedFile.FileName;
-                    postedFile.SaveAs(root);
-                    //Save post to DB
-                        return Request.CreateResponse(HttpStatusCode.Found, new
-                        {
-                            error = false,
-                            status = "created",
-                            path = root
-                        });
-                     
-                }
-            }
-
-            return null;
         }
 
         // PUT api/<controller>/5
+        [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/<controller>/5
+        [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }

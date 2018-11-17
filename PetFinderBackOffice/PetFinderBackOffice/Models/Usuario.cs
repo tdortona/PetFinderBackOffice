@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace PetFinderBackOffice.Models
+{
+    public partial class Usuario
+    {
+        public Usuario()
+        {
+            ImagenMascota = new HashSet<ImagenMascota>();
+            Mascota = new HashSet<Mascota>();
+        }
+
+        public int IdUsuario { get; set; }
+        public string Avatar { get; set; }
+        public string Nombre { get; set; }
+        public string Email { get; set; }
+        public string Direccion { get; set; }
+
+        public ICollection<ImagenMascota> ImagenMascota { get; set; }
+        public ICollection<Mascota> Mascota { get; set; }
+    }
+}
