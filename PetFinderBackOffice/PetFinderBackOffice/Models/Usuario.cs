@@ -16,7 +16,12 @@ namespace PetFinderBackOffice.Models
         public string Nombre { get; set; }
         public string Email { get; set; }
         public string Direccion { get; set; }
+        public int IdRedSocial { get; set; }
+        public string IdUsuarioRedSocial { get; set; }
+        public string TelefonoContacto { get; set; }
 
+        public Usuario IdUsuarioNavigation { get; set; }
+        public Usuario InverseIdUsuarioNavigation { get; set; }
         public ICollection<ImagenMascota> ImagenMascota { get; set; }
         public ICollection<Mascota> Mascota { get; set; }
     }

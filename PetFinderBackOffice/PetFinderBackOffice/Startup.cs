@@ -31,13 +31,19 @@ namespace PetFinderBackOffice
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddMvc()
+               .AddJsonOptions(
+                   options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+               );
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
                        .AllowAnyMethod()
-                       .AllowAnyHeader();
+                       .AllowAnyHeader()
+                       .AllowCredentials();
             }));
         }
 
