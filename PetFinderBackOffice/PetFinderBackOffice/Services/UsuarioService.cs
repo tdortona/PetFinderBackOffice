@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PetFinderBackOffice.Models;
 using PetFinderBackOffice.Repositories;
+using PetFinderBackOffice.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,14 @@ namespace PetFinderBackOffice.Services
     {
         private readonly UsuarioRepository usuarioRepository = new UsuarioRepository();
 
-        public Usuario BuscaUsuarioPorId(int id)
+        public Usuario BuscaUsuarioPorId(string id)
         {
             return usuarioRepository.BuscaUsuarioPorId(id);
+        }
+
+        public void RegistrarUsuario(UsuarioViewModel usuarioNuevo)
+        {
+            usuarioRepository.RegistrarUsuario(usuarioNuevo);
         }
     }
 }
