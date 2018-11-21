@@ -1,0 +1,55 @@
+﻿<body id="page-top" class="background-fondo">
+    <!-- Header -->
+    <header class="masthead text-white text-center">
+        <div class="row" style="margin-right: 0px !important;">
+            <div class="col-md-5" style="margin-left: 15px;">
+                <div class="">
+                    <img class="img-fluid mb-5 logoLanding" src="~/images/logo_CF.png" alt="">
+                    @*<h1 class="mb-0"></h1>
+                    <img class="img-fluid nombre-image" src="img/IAshley.jpg" alt="">*@
+                    <br>
+                    <div class="fondo-mensaje">
+                        <h2 class="font-weight-light mb-0 padding-h2 ">Perder a tu mascota es algo angustiante. CanFind te ayuda a encontrarla.</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-right: 0px !important">
+            <div class="col-md-5" style="margin-left: 15px">
+                <form name="sentMessage" id="contactForm" novalidate="novalidate">
+                    <p>
+                        <div class="control-group">
+                            <div class="input-group mb-3">
+                                <input class="form-control placeholderColor" style="border-top-left-radius: 40px !important; border-bottom-left-radius: 40px !important;" id="email" type="email" placeholder="Email" required="required" data-validation-required-message="Por favor, ingresa tu email.">
+                                <div class="input-group-append">
+                                    <button type="submit" class="form-control btn btn-primary" style="border-top-right-radius: 40px !important; border-bottom-right-radius: 40px !important;" id="sendMessageButton">Enviar</button>
+                                </div>
+                            </div>
+                            <div class="center-block col-sm-12">
+                                <div class="center-block center-recaptche">
+                                    <div class="g-recaptcha" data-sitekey="6Les_3UUAAAAALgLahUHvyniHIUvyEpOpFvNkEHJ"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </p>
+                    <br>
+                    <div id="success"></div>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <link href="~/css/estilo.css" rel="stylesheet" type="text/css">
+    <link href="~/css/freelancer.css" rel="stylesheet">
+    
+    <!-- Bootstrap core CSS -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="~/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- recaptcha -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</body>

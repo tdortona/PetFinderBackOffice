@@ -15,6 +15,11 @@ namespace PetFinderBackOffice.Controllers
             return View();
         }
 
+        public IActionResult LandingPage()
+        {
+            return View();
+        }
+
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
