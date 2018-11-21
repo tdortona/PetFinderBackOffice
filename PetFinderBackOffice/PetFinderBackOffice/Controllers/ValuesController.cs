@@ -41,9 +41,10 @@ namespace PetFinderBackOffice.Controllers
         }
 
         // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
+        [HttpPost("/api/Values/Prueba")]
+        public void Post([FromBody]PruebaModel algo)
         {
+            algo.Value = algo.Value + " hola";
         }
 
         // PUT api/<controller>/5
@@ -57,5 +58,10 @@ namespace PetFinderBackOffice.Controllers
         public void Delete(int id)
         {
         }
+    }
+
+    public class PruebaModel
+    {
+        public string Value { get; set; }
     }
 }
