@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetFinderBackOffice.Models;
 using PetFinderBackOffice.Services;
+using PetFinderBackOffice.ViewModels;
 
 namespace PetFinderBackOffice.Controllers
 {
@@ -16,93 +17,37 @@ namespace PetFinderBackOffice.Controllers
     {
         private readonly UsuarioService usuarioService = new UsuarioService();
 
-        // GET: Usuario
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET api/<controller>/5
+        // GET api/[controller]/id
         [HttpGet("{id}")]
-        public IActionResult BuscaUsuarioPorId(int id)
+        public IActionResult BuscaUsuarioPorId(string id)
         {
             Usuario usuario = usuarioService.BuscaUsuarioPorId(id);
             return this.Ok(usuario);
         }
 
-        // GET: Usuario/Details/5
-        public ActionResult Details(int id)
+        // POST: api/<controller>/ValidarUsuario
+        [HttpPost("/api/Usuario/ValidarUsuario")]
+        public IActionResult ValidarUsuario([FromBody]UsuarioViewModel rdUser)
         {
-            return View();
-        }
-
-        // GET: Usuario/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Usuario/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+            Usuario usuario = usuarioService.BuscaUsuarioPorId(rdUser.Id);
+             
+            if(usuario != null)
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                return this.Ok(usuario);
             }
-            catch
+            else
             {
-                return View();
+                usuarioService.RegistrarUsuario(rdUser);
+                usuario = usuarioService.BuscaUsuarioPorId(rdUser.Id);
+                return this.Ok(usuario);
             }
         }
 
-        // GET: Usuario/Edit/5
-        public ActionResult Edit(int id)
+        [HttpGet]
+        [Route("api/Usuario/PruebaGet")]
+        public IActionResult PruebaGet()
         {
-            return View();
-        }
-
-        // POST: Usuario/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Usuario/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Usuario/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return this.Ok();
         }
     }
 }
