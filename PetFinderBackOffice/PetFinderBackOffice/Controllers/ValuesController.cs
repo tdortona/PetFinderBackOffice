@@ -25,25 +25,29 @@ namespace PetFinderBackOffice.Controllers
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public Usuario Get(int id)
+        public JsonResult Get(int id)
         {
             this.context.Usuario.Add(new Usuario()
             {
                 Avatar = "",
                 Direccion = "Palacios 374",
                 Email = "tdortona@gmail.com",
-                Nombre = "Tomas"
+                Nombre = "Tomas",
+                TelefonoContacto = "111 2222",
+                IdRedSocial = 2,
+                IdUsuarioRedSocial = "qwerty"
             });
 
             this.context.SaveChanges();
 
-            return this.context.Usuario.LastOrDefault();
+            return new JsonResult(this.context.Usuario.LastOrDefault());
         }
 
         // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
+        [HttpPost("/api/Values/Prueba")]
+        public void Post([FromBody]PruebaModel algo)
         {
+            algo.Value = algo.Value + " hola";
         }
 
         // PUT api/<controller>/5
@@ -57,5 +61,10 @@ namespace PetFinderBackOffice.Controllers
         public void Delete(int id)
         {
         }
+    }
+
+    public class PruebaModel
+    {
+        public string Value { get; set; }
     }
 }

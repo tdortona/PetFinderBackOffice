@@ -31,13 +31,19 @@ namespace PetFinderBackOffice
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddMvc()
+               .AddJsonOptions(
+                   options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+               );
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
                        .AllowAnyMethod()
-                       .AllowAnyHeader();
+                       .AllowAnyHeader()
+                       .AllowCredentials();
             }));
         }
 
@@ -62,7 +68,7 @@ namespace PetFinderBackOffice
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=LandingPage}/{id?}");
             });
 
             app.UseDefaultFiles();
