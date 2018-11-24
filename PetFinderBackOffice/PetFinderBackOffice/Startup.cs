@@ -72,6 +72,9 @@ namespace PetFinderBackOffice
                     name: "default",
                     template: "{controller=Home}/{action=LandingPage}/{id?}");
             });
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
         }
     }
 }

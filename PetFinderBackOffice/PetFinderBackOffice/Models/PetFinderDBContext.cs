@@ -25,8 +25,10 @@ namespace PetFinderBackOffice.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=PetFinderDB;Trusted_Connection=True;");
+                // optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=PetFinderDB;Trusted_Connection=True;");
+                //datos produccion DB
+                // optionsBuilder.UseNpgsql("User ID=tuozypsimqmojk;Password=4efa38c2155e42ddfbf0b1a69b6ccb740f816f2e637dfa25fa13f1e777920aca;Server=ec2-50-19-249-121.compute-1.amazonaws.com;Port=5432;Database=d1tv94rvfp2pcl;Integrated Security=true;Pooling=true;");
+                optionsBuilder.UseNpgsql("User ID=postgres;Password=postgres;Server=localhost;Port=5432;Database=PetFinderDB;Integrated Security=true;Pooling=true;");
             }
         }
 
