@@ -29,7 +29,8 @@ namespace PetFinderBackOffice
                 builder.AllowAnyOrigin()
                        .AllowAnyMethod()
                        .AllowAnyHeader()
-                       .AllowCredentials();
+                       .AllowCredentials()
+                       .WithOrigins("http://localhost:8000/", "http://localhost:8100/");
             }));
 
             services.Configure<CookiePolicyOptions>(options =>
