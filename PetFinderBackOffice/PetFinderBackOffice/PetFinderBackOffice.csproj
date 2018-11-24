@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="bin\Release\netcoreapp2.1\publish\Dockerfile" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="IBM.WatsonDeveloperCloud.VisualRecognition.v3" Version="2.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <!-- <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.4" /> -->
