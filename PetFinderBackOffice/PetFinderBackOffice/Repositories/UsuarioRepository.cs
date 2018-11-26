@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace PetFinderBackOffice.Repositories
 {
@@ -35,5 +36,14 @@ namespace PetFinderBackOffice.Repositories
 
             this.context.SaveChanges();
         }
+
+        public List<Mascota> TraerMisMascotas(int idUsuario)
+        {
+           return this.context.Mascota
+                .Include(a => a.ImagenMascota)
+                .Where(b => b.IdUsuario == idUsuario)
+                .ToList();        
+        }
     }
 }
+

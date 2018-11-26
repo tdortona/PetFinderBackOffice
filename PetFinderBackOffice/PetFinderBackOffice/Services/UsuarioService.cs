@@ -23,5 +23,10 @@ namespace PetFinderBackOffice.Services
         {
             usuarioRepository.RegistrarUsuario(usuarioNuevo);
         }
+
+        public List<Mascota> TraerMisMascotas(int idUsuario)
+        {
+            return usuarioRepository.TraerMisMascotas(idUsuario);
+        }
     }
 }
