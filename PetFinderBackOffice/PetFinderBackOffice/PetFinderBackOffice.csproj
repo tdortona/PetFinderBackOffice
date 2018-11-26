@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ImagenesMascota\**" />
+    <None Include="bin\Release\netcoreapp2.1\publish\Dockerfile" />
+	<Compile Remove="ImagenesMascota\**" />
     <Content Remove="ImagenesMascota\**" />
     <EmbeddedResource Remove="ImagenesMascota\**" />
     <None Remove="ImagenesMascota\**" />

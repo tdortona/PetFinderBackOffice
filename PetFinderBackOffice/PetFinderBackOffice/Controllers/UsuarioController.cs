@@ -25,6 +25,15 @@ namespace PetFinderBackOffice.Controllers
             return this.Ok(usuario);
         }
 
+
+        // GET: api/<controller>/TraerMisMascotas/{id}
+        [HttpGet("/api/Usuario/TraerMisMascotas/{id}")]
+        public IActionResult TraerMisMascotas(int id)
+        {
+            List<Mascota> misMascotas = usuarioService.TraerMisMascotas(id);
+            return this.Ok(misMascotas);
+        }
+
         // POST: api/<controller>/ValidarUsuario
         [HttpPost("/api/Usuario/ValidarUsuario")]
         public IActionResult ValidarUsuario([FromBody]UsuarioViewModel rdUser)

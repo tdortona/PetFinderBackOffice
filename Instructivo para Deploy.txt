@@ -1,0 +1,31 @@
+1) En visual studio, consola de windows (cmd), 
+comando: dotnet publish -c Release (en la carpeta que contiene la solucion)
+Enter
+
+(la 1ra vez acceder a bin/release/netcoreapp2.1/publish, dentro de publish se pega el Dockerfile)
+
+2) Abrir Docker, docker build -t canfind ./PetFinderBackOffice/bin/Release/netcoreapp2.1/publish 
+Enter (nombre de la imagen que vamos a crear en docker y el mismo nombre de la img que vamos autilizar en heroku)
+
+3) Abrir Heroku (usando terminar) 
+comando: heroku login
+se abre pestaña en el navegador, si no anda tirar heroku login --interactive
+usuario: j.velazquez1985@gmail.com 
+pass: abrh++11
+con esto se logea
+
+comando: heroku container:login 
+Me devuelve login success
+
+comando: docker tag canfind registry.heroku.com/canfind/web Enter
+comando: docker push registry.heroku.com/canfind/web Enter
+comando: heroku container:relase web -a canfind Enter
+
+Abrir navegador y corroborar con la siguiente url
+canfind.herokuapp.com
+
+canfind.herokuapp.com/api/values/5
+
+**Siempre realizar los Scripts 
+psql -h host -p port -d dbname U username -f datafile.sql
+(ese comando  hay que reemplazarle los datos)
