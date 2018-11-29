@@ -40,7 +40,6 @@ namespace PetFinderBackOffice.Repositories
         public List<Mascota> TraerMisMascotas(int idUsuario)
         {
            return this.context.Mascota
-                .Include(a => a.ImagenMascota)
                 .Where(b => b.IdUsuario == idUsuario)
                 .ToList();        
         }
