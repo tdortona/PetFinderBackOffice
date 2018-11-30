@@ -18,6 +18,8 @@ namespace PetFinderBackOffice.Controllers
         private readonly UsuarioService usuarioService = new UsuarioService();
         private readonly MascotaService mascotaService = new MascotaService();
         private readonly ImagenMascotaService imagenMascotaService = new ImagenMascotaService();
+        private readonly LogErroresService logErroresService = new LogErroresService();
+
         private const string mascotasPath = "Resources//Img//Mascotas//";
 
         // GET api/[controller]/id
@@ -33,26 +35,34 @@ namespace PetFinderBackOffice.Controllers
         [HttpGet("/api/Usuario/TraerMisMascotas/{id}")]
         public IActionResult TraerMisMascotas(int id)
         {
-            List<Mascota> misMascotas  = new List<Mascota>();
-            List<MascotaViewModel> misMascotasViewModel = new List<MascotaViewModel>();
-            string nombreImg;
-            misMascotas = usuarioService.TraerMisMascotas(id);
-
-            foreach (Mascota mascota in misMascotas)
+            try
             {
-                nombreImg = mascotaService.TraerAvatarMascota(mascota.IdMascota);
+                List<Mascota> misMascotas  = new List<Mascota>();
+                List<MascotaViewModel> misMascotasViewModel = new List<MascotaViewModel>();
+                string nombreImg;
+                misMascotas = usuarioService.TraerMisMascotas(id);
 
-                misMascotasViewModel.Add(new MascotaViewModel()
+                foreach (Mascota mascota in misMascotas)
                 {
-                    IdMascota = mascota.IdMascota,
-                    IdUsuario = mascota.IdUsuario,
-                    Nombre = mascota.Nombre,
-                    Perdida = mascota.Perdida,
-                    Avatar = "data:image/jpeg;base64," + this.imagenMascotaService.GetImagen(mascota.IdMascota, nombreImg),
-                    DescripcionRaza = mascotaService.TraeDescripcionRaza(mascota.IdRaza)                    
-                });
+                    nombreImg = mascotaService.TraerAvatarMascota(mascota.IdMascota);
+
+                    misMascotasViewModel.Add(new MascotaViewModel()
+                    {
+                        IdMascota = mascota.IdMascota,
+                        IdUsuario = mascota.IdUsuario,
+                        Nombre = mascota.Nombre,
+                        Perdida = mascota.Perdida,
+                        Avatar = "data:image/jpeg;base64," + this.imagenMascotaService.GetImagen(mascota.IdMascota, nombreImg),
+                        DescripcionRaza = mascotaService.TraeDescripcionRaza(mascota.IdRaza)                    
+                    });
+                }
+                return this.Ok(misMascotasViewModel);
             }
-            return this.Ok(misMascotasViewModel);
+            catch (Exception e)
+            {
+                this.logErroresService.LogError(e.Message);
+                throw;
+            }
         }
 
         // POST: api/<controller>/ValidarUsuario
