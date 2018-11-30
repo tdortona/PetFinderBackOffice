@@ -17,6 +17,7 @@ namespace PetFinderBackOffice.Models
 
         public virtual DbSet<ConsultasWatson> ConsultasWatson { get; set; }
         public virtual DbSet<ImagenMascota> ImagenMascota { get; set; }
+        public virtual DbSet<LogError> LogError { get; set; }
         public virtual DbSet<Mascota> Mascota { get; set; }
         public virtual DbSet<Raza> Raza { get; set; }
         public virtual DbSet<RedSocial> RedSocial { get; set; }
@@ -67,6 +68,11 @@ namespace PetFinderBackOffice.Models
                     .HasForeignKey(d => d.IdUsuario)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("ImagenMascota_IdUsuario_fkey");
+            });
+
+            modelBuilder.Entity<LogError>(entity =>
+            {
+                entity.Property(e => e.MensajeExcepcion).HasColumnType("character varying");
             });
 
             modelBuilder.Entity<Mascota>(entity =>
