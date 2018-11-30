@@ -16,6 +16,7 @@ namespace PetFinderBackOffice.Controllers
     public class UsuarioController : Controller
     {
         private readonly UsuarioService usuarioService = new UsuarioService();
+        private readonly MascotaService mascotaService = new MascotaService();
 
         // GET api/[controller]/id
         [HttpGet("{id}")]
@@ -30,8 +31,24 @@ namespace PetFinderBackOffice.Controllers
         [HttpGet("/api/Usuario/TraerMisMascotas/{id}")]
         public IActionResult TraerMisMascotas(int id)
         {
-            List<Mascota> misMascotas = usuarioService.TraerMisMascotas(id);
-            return this.Ok(misMascotas);
+            List<Mascota> misMascotas  = new List<Mascota>();
+            List<MascotaViewModel> misMascotasViewModel = new List<MascotaViewModel>();
+
+            misMascotas = usuarioService.TraerMisMascotas(id);
+
+            foreach (Mascota mascota in misMascotas)
+            {
+                misMascotasViewModel.Add(new MascotaViewModel()
+                {
+                    IdMascota = mascota.IdMascota,
+                    IdUsuario = mascota.IdUsuario,
+                    Nombre = mascota.Nombre,
+                    Perdida = mascota.Perdida,
+                    Avatar = mascotaService.TraerAvatarMascota(mascota.IdMascota),
+                    DescripcionRaza = mascotaService.TraeDescripcionRaza(mascota.IdRaza)                    
+                });
+            }
+            return this.Ok(misMascotasViewModel);
         }
 
         // POST: api/<controller>/ValidarUsuario
