@@ -44,6 +44,11 @@ namespace PetFinderBackOffice.Repositories
                 .Where(b => b.IdUsuario == idUsuario)
                 .ToList();        
         }
+
+        public Usuario GetUsuarioContacto(int idUsuario)
+        {
+            return this.context.Usuario.FirstOrDefault(x => x.IdUsuario == idUsuario);
+        }
     }
 }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PetFinderBackOffice.Models;
+using PetFinderBackOffice.Services;
 using PetFinderBackOffice.ViewModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -24,6 +26,10 @@ namespace PetFinderBackOffice.Controllers
     [Route("api/[controller]")]
     public class ImagenMascotaController : Controller
     {
+        private readonly ConsultasWatsonService consultasWatsonService = new ConsultasWatsonService();
+        private readonly ImagenMascotaService imagenMascotaService = new ImagenMascotaService();
+        private const string encontradosPath = "Resources//Img//Mascotas//Encontrados";
+        private const string mascotasPath = "Resources//Img//Mascotas//";
         private const string versionDate = "2018-03-19";
         private const string apikey = "HY_-KRN409tGl3X4Yp3zrbVxKpLGugfZ5HPr2gsCGMiC";
         private const string endpoint = "https://gateway.watsonplatform.net/visual-recognition/api";
@@ -36,20 +42,25 @@ namespace PetFinderBackOffice.Controllers
         [HttpPost("/api/ImagenMascota/FotoEncontrado"), DisableRequestSizeLimit]
         public IActionResult FotoEncontrado([FromBody]ImageFromServerModel imagenVM)
         {
-            if (!Directory.Exists("ImagenesMascota"))
+            if (!Directory.Exists(encontradosPath))
             {
-                Directory.CreateDirectory("ImagenesMascota");
+                Directory.CreateDirectory(encontradosPath);
             }
 
-            var img = Convert.FromBase64String(imagenVM.ImageURI);
-            System.IO.File.WriteAllBytes("ImagenesMascota//prueba.jpg", img);
+            string imageName = DateTime.Now.Ticks.ToString();
 
-            var res = this.EnviarFotoAWatson("ImagenesMascota//prueba.jpg");
+            var img = Convert.FromBase64String(imagenVM.ImageURI);
+            System.IO.File.WriteAllBytes(encontradosPath + "//" + imageName + ".jpg", img);
+
+            imagenVM.Localizacion = "LOCALIZACION";
+            int idImagen = this.imagenMascotaService.AddImagenMascotaEncontrada(imageName, imagenVM.Localizacion);
+
+            var res = this.EnviarFotoAWatson(encontradosPath + "//" + imageName + ".jpg", idImagen);
 
             return this.Ok(res);
         }
 
-        private string EnviarFotoAWatson(string path)
+        private string EnviarFotoAWatson(string path, int idImagen)
         {
             VisualRecognitionService visualRecognition = new VisualRecognitionService();
             visualRecognition.SetEndpoint(endpoint);
@@ -67,9 +78,16 @@ namespace PetFinderBackOffice.Controllers
             
             var result = visualRecognition.Classify(img, classifierIds: classifierIds);
 
+            this.GuardarInteraccionConWatson(result, idImagen);
+
             img.Close();
 
             return result.ResponseJson;
+        }
+
+        private void GuardarInteraccionConWatson(ClassifiedImages result, int idImagen)
+        {
+            this.consultasWatsonService.GuardarInteraccionConWatson(result, idImagen);
         }
     }
 }

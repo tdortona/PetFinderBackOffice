@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 
 namespace PetFinderBackOffice.ViewModels
 {
-    public class ImageFromServerModel
+    public class ResultadoBusqueda
     {
         public int IdUsuario { get; set; }
 
-        public string ImageURI { get; set; }
+        public string Clase { get; set; }
 
-        public string Localizacion { get; set; }
+        public float Score { get; set; }
+
+        public string Imagen { get; set; }
     }
 }

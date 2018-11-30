@@ -52,11 +52,19 @@ namespace PetFinderBackOffice.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("api/Usuario/PruebaGet")]
-        public IActionResult PruebaGet()
+        [HttpGet("/api/Usuario/GetUsuarioContacto/{idUsuario}")]
+        public IActionResult GetUsuarioContacto(int idUsuario)
         {
-            return this.Ok();
+            var us = this.usuarioService.GetUsuarioContacto(idUsuario);
+
+            ContactarUsuarioViewModel usVM = new ContactarUsuarioViewModel
+            {
+                Email = us.Email,
+                Nombre = us.Nombre,
+                TelefonoContacto = us.TelefonoContacto
+            };
+
+            return this.Ok(usVM);
         }
     }
 }
