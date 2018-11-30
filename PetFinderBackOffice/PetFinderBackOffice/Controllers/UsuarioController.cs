@@ -17,6 +17,8 @@ namespace PetFinderBackOffice.Controllers
     {
         private readonly UsuarioService usuarioService = new UsuarioService();
         private readonly MascotaService mascotaService = new MascotaService();
+        private readonly ImagenMascotaService imagenMascotaService = new ImagenMascotaService();
+        private const string mascotasPath = "Resources//Img//Mascotas//";
 
         // GET api/[controller]/id
         [HttpGet("{id}")]
@@ -33,18 +35,20 @@ namespace PetFinderBackOffice.Controllers
         {
             List<Mascota> misMascotas  = new List<Mascota>();
             List<MascotaViewModel> misMascotasViewModel = new List<MascotaViewModel>();
-
+            string nombreImg;
             misMascotas = usuarioService.TraerMisMascotas(id);
 
             foreach (Mascota mascota in misMascotas)
             {
+                nombreImg = mascotaService.TraerAvatarMascota(mascota.IdMascota);
+
                 misMascotasViewModel.Add(new MascotaViewModel()
                 {
                     IdMascota = mascota.IdMascota,
                     IdUsuario = mascota.IdUsuario,
                     Nombre = mascota.Nombre,
                     Perdida = mascota.Perdida,
-                    Avatar = mascotaService.TraerAvatarMascota(mascota.IdMascota),
+                    Avatar = "data:image/jpeg;base64," + this.imagenMascotaService.GetImagen(mascota.IdMascota, nombreImg),
                     DescripcionRaza = mascotaService.TraeDescripcionRaza(mascota.IdRaza)                    
                 });
             }

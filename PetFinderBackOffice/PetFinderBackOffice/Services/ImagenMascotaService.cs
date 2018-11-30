@@ -26,7 +26,7 @@ namespace PetFinderBackOffice.Services
         public string GetImagen(int idMascota, string nombreFoto)
         {
             var physicalPath = idMascota != 0 ?
-                mascotasPath + "//" + idMascota + "//" + nombreFoto + ".jpg" :
+                mascotasPath + idMascota + "//" + nombreFoto + ".jpg" :
                 encontradosPath + "//" + nombreFoto + ".jpg";
 
             var imgB = System.IO.File.ReadAllBytes(physicalPath);

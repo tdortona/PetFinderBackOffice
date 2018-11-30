@@ -16,7 +16,7 @@ namespace PetFinderBackOffice.Repositories
             ConsultasWatson consulta = new ConsultasWatson
             {
                 Clase = result.Images.FirstOrDefault()?.Classifiers.FirstOrDefault()?.Classes.FirstOrDefault()?.ClassName,
-                Score = result.Images.FirstOrDefault()?.Classifiers.FirstOrDefault()?.Classes.FirstOrDefault()?.Score.Value,
+                Score = result.Images.FirstOrDefault()?.Classifiers.FirstOrDefault()?.Classes.FirstOrDefault()?.Score.Value * 100,
                 IdImagen = idImagen
             };
 
