@@ -44,6 +44,7 @@ namespace PetFinderBackOffice.Controllers
                     IdUsuario = mascota.IdUsuario,
                     Nombre = mascota.Nombre,
                     Perdida = mascota.Perdida,
+                    Avatar = mascotaService.TraerAvatarMascota(mascota.IdMascota),
                     DescripcionRaza = mascotaService.TraeDescripcionRaza(mascota.IdRaza)                    
                 });
             }

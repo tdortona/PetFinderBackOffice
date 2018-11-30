@@ -14,9 +14,36 @@ namespace PetFinderBackOffice.Repositories
         {
             string descripcion = this.context.Raza
                 .Where(r => r.IdRaza == idRaza)
-                .Select(d => d.Descripcion).FirstOrDefault();
-                ;
+                .Select(d => d.Descripcion).FirstOrDefault();            
             return descripcion;
+        }
+
+        public string TraerAvatarMascota(int idMascota)
+        {
+            string imagenPath = this.context.ImagenMascota
+                .Where(i => i.IdMascota == idMascota)
+                .Select(p => p.ImagenPath).FirstOrDefault();
+            return imagenPath;
+        }
+
+        public Mascota TraerMascota(int idMascota)
+        {
+            return this.context.Mascota
+                .FirstOrDefault(m => m.IdMascota == idMascota);
+        }
+
+        public void ReportarPerdida(int idMascota)
+        {
+            Mascota mascotaBuscada = this.context.Mascota.FirstOrDefault(m => m.IdMascota == idMascota);
+            mascotaBuscada.Perdida = true;
+            this.context.SaveChanges();
+        }
+
+        public void ReportarEncontrada(int idMascota)
+        {
+            Mascota mascotaBuscada = this.context.Mascota.FirstOrDefault(m => m.IdMascota == idMascota);
+            mascotaBuscada.Perdida = false;
+            this.context.SaveChanges();
         }
     }
 }
