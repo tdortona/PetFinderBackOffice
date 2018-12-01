@@ -10,8 +10,8 @@ namespace PetFinderBackOffice.Services
     public class ImagenMascotaService
     {
         private readonly ImagenMascotaRepository imagenMascotaRepository = new ImagenMascotaRepository();
-        private readonly string encontradosPath = AppDomain.CurrentDomain.BaseDirectory +  "Resources\\Img\\Mascotas\\Encontrados";
-        private readonly string mascotasPath = AppDomain.CurrentDomain.BaseDirectory + "Resources\\Img\\Mascotas\\";
+        private readonly string encontradosPath = AppContext.BaseDirectory +  "Resources\\Img\\Mascotas\\Encontrados";
+        private readonly string mascotasPath = AppContext.BaseDirectory + "Resources\\Img\\Mascotas\\";
 
         public int AddImagenMascotaEncontrada(string path, string localizacion, int idUsuario)
         {

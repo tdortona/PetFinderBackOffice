@@ -28,8 +28,8 @@ namespace PetFinderBackOffice.Controllers
     {
         private readonly ConsultasWatsonService consultasWatsonService = new ConsultasWatsonService();
         private readonly ImagenMascotaService imagenMascotaService = new ImagenMascotaService();
-        private readonly string encontradosPath = AppDomain.CurrentDomain.BaseDirectory + "Resources\\Img\\Mascotas\\Encontrados";
-        private readonly string mascotasPath = AppDomain.CurrentDomain.BaseDirectory + "Resources\\Img\\Mascotas\\";
+        private readonly string encontradosPath = AppContext.BaseDirectory + "Resources\\Img\\Mascotas\\Encontrados";
+        private readonly string mascotasPath = AppContext.BaseDirectory + "Resources\\Img\\Mascotas\\";
         private const string versionDate = "2018-03-19";
         private const string apikey = "HY_-KRN409tGl3X4Yp3zrbVxKpLGugfZ5HPr2gsCGMiC";
         private const string endpoint = "https://gateway.watsonplatform.net/visual-recognition/api";

@@ -20,7 +20,7 @@ namespace PetFinderBackOffice.Controllers
         private readonly MascotaService mascotaService = new MascotaService();
         private readonly ImagenMascotaService imagenMascotaService = new ImagenMascotaService();
         private readonly LogErroresService logErroresService = new LogErroresService();
-        private readonly string mascotasPath = AppDomain.CurrentDomain.BaseDirectory + "Resources\\Img\\Mascotas\\";
+        private readonly string mascotasPath = AppContext.BaseDirectory + "Resources\\Img\\Mascotas\\";
 
         // GET api/[controller]/id
         [HttpGet("{id}")]
