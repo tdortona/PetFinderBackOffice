@@ -10,12 +10,12 @@ namespace PetFinderBackOffice.Repositories
     {
         private readonly PetFinderDBContext context = new PetFinderDBContext();
 
-        public int AddImagenMascotaEncontrada(string path, string localizacion)
+        public int AddImagenMascotaEncontrada(string path, string localizacion, int idUsuario)
         {
             ImagenMascota imagenMascota = new ImagenMascota
             {
                 IdMascota = 0,
-                IdUsuario = 1, //PROVISORIO
+                IdUsuario = idUsuario,
                 ImagenPath = path,
                 Localizacion = localizacion
             };
