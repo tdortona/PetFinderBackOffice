@@ -16,7 +16,7 @@ namespace PetFinderBackOffice.Repositories
 
         public Usuario BuscaUsuarioPorId(string id)
         {
-            Usuario usuario = this.context.Usuario.LastOrDefault(u => u.IdUsuarioRedSocial == id);
+            Usuario usuario = this.context.Usuario.FirstOrDefault(u => u.IdUsuarioRedSocial == id);
             return usuario;
         }
 
@@ -40,9 +40,14 @@ namespace PetFinderBackOffice.Repositories
         public List<Mascota> TraerMisMascotas(int idUsuario)
         {
            return this.context.Mascota
-                .Include(a => a.ImagenMascota)
+                .Include(i => i.ImagenMascota)
                 .Where(b => b.IdUsuario == idUsuario)
                 .ToList();        
+        }
+
+        public Usuario GetUsuarioContacto(int idUsuario)
+        {
+            return this.context.Usuario.FirstOrDefault(x => x.IdUsuario == idUsuario);
         }
     }
 }
