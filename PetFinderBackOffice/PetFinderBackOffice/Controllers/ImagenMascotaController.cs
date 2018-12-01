@@ -71,5 +71,23 @@ namespace PetFinderBackOffice.Controllers
 
             return result.ResponseJson;
         }
+
+        // POST api/<controller>
+        [HttpPost("/api/ImagenMascota/AgregarFoto"), DisableRequestSizeLimit]
+        public void AgregarFoto([FromBody]ImageFromServerModel imagenVM)
+        {
+            //Resources//Img//Mascotas//{idMascota}//...jpg
+            if (!Directory.Exists("Resources//ImagenesMascota"))
+            {
+                Directory.CreateDirectory("Resources//ImagenesMascota");
+            }
+
+            long ahora = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            String nombreImagen = ahora.ToString(); 
+            
+            var img = Convert.FromBase64String(imagenVM.ImageURI);
+            System.IO.File.WriteAllBytes("Resources//ImagenesMascota//" + nombreImagen + ".jpg", img);
+
+        }
     }
 }
