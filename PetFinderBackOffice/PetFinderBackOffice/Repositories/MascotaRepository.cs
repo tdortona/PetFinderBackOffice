@@ -52,5 +52,10 @@ namespace PetFinderBackOffice.Repositories
             this.context.Mascota.Add(mascota);
             this.context.SaveChanges();
         }
+
+        public List<Raza> TraerRazas()
+        {
+            return this.context.Raza.ToList();
+        }
     }
 }

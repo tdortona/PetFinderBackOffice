@@ -63,5 +63,14 @@ namespace PetFinderBackOffice.Controllers
             mascotaService.AgregarMascotaNueva(mascotaNueva);
             return this.Ok();
         }
+
+        // GET: api/<controller>/TraerRazas
+        [HttpGet("/api/Mascota/TraerRazas")]
+        public IActionResult TraerRazas()
+        {
+            List<Raza> listaRazas = new List<Raza>();
+            listaRazas = mascotaService.TraerRazas();
+            return this.Ok(listaRazas);
+        }
     }
 }
