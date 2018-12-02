@@ -14,7 +14,7 @@ namespace PetFinderBackOffice.Repositories
         {
             ImagenMascota imagenMascota = new ImagenMascota
             {
-                IdMascota = 0,
+                IdMascota = null,
                 IdUsuario = idUsuario,
                 ImagenPath = path,
                 Localizacion = localizacion

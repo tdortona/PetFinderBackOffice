@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using IBM.WatsonDeveloperCloud.Util;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
@@ -52,6 +53,8 @@ namespace PetFinderBackOffice.Controllers
             var img = Convert.FromBase64String(imagenVM.ImageURI);
             System.IO.File.WriteAllBytes(encontradosPath + "//" + imageName + ".jpg", img);
 
+            this.imagenMascotaService.GuardarFotoEnServidor( imagenVM.ImageURI, imageName, true );
+
             imagenVM.Localizacion = "LOCALIZACION";
             int idImagen = this.imagenMascotaService.AddImagenMascotaEncontrada(imageName, imagenVM.Localizacion, imagenVM.IdUsuario);
 
@@ -59,6 +62,7 @@ namespace PetFinderBackOffice.Controllers
 
             return this.Ok(res);
         }
+        
 
         private string EnviarFotoAWatson(string path, int idImagen)
         {
@@ -106,5 +110,7 @@ namespace PetFinderBackOffice.Controllers
         {
             this.consultasWatsonService.GuardarInteraccionConWatson(result, idImagen);
         }
+
+        
     }
 }
