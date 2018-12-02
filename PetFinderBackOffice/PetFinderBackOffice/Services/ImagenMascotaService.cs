@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using PetFinderBackOffice.Models;
 using PetFinderBackOffice.Repositories;
+using PetFinderBackOffice.ViewModels;
 
 namespace PetFinderBackOffice.Services
 {
@@ -34,6 +38,29 @@ namespace PetFinderBackOffice.Services
             var img = Convert.ToBase64String(imgB);
 
             return img;
+        }
+
+        public async Task<HttpResponseMessage> GuardarFotoEnServidor(string imagenBase64, string nombreImagen, bool encontrado)
+        {
+            HttpClient client = new HttpClient();
+            string uri = "http://criaderononthue.com/img/canfind/controllers/guardarImagenController.php";
+
+            if(encontrado)
+            {
+                uri = "http://criaderononthue.com/img/canfind/controllers/guardarImagenEncontradoController.php";
+            }
+
+            var parametros = new ImagenAGuardar
+            {
+                imagen64 = imagenBase64,
+                nameFile = nombreImagen
+            };
+
+            var dataAsString = JsonConvert.SerializeObject(parametros);
+            var content = new StringContent(dataAsString);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var status = await client.PostAsync(uri, content);
+            return status;
         }
     }
 }

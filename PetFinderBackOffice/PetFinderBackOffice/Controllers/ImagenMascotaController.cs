@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using IBM.WatsonDeveloperCloud.Util;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
@@ -40,7 +41,7 @@ namespace PetFinderBackOffice.Controllers
 
         // POST api/<controller>
         [HttpPost("/api/ImagenMascota/FotoEncontrado"), DisableRequestSizeLimit]
-        public IActionResult FotoEncontrado([FromBody]ImageFromServerModel imagenVM)
+        public async Task<IActionResult> FotoEncontrado([FromBody]ImageFromServerModel imagenVM)
         {
             if (!Directory.Exists(encontradosPath))
             {
@@ -52,6 +53,8 @@ namespace PetFinderBackOffice.Controllers
             var img = Convert.FromBase64String(imagenVM.ImageURI);
             System.IO.File.WriteAllBytes(encontradosPath + "//" + imageName + ".jpg", img);
 
+            await this.imagenMascotaService.GuardarFotoEnServidor(imagenVM.ImageURI, imageName, true );
+
             imagenVM.Localizacion = "LOCALIZACION";
             int idImagen = this.imagenMascotaService.AddImagenMascotaEncontrada(imageName, imagenVM.Localizacion, imagenVM.IdUsuario);
 
@@ -59,6 +62,7 @@ namespace PetFinderBackOffice.Controllers
 
             return this.Ok(res);
         }
+        
 
         private string EnviarFotoAWatson(string path, int idImagen)
         {
@@ -85,9 +89,28 @@ namespace PetFinderBackOffice.Controllers
             return result.ResponseJson;
         }
 
+        // POST api/<controller>
+        [HttpPost("/api/ImagenMascota/AgregarFoto"), DisableRequestSizeLimit]
+        public void AgregarFoto([FromBody]ImageFromServerModel imagenVM)
+        {
+            //Resources//Img//Mascotas//{idMascota}//...jpg
+            if (!Directory.Exists("Resources//ImagenesMascota"))
+            {
+                Directory.CreateDirectory("Resources//ImagenesMascota");
+            }
+
+            long ahora = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            String nombreImagen = ahora.ToString(); 
+            
+            var img = Convert.FromBase64String(imagenVM.ImageURI);
+            System.IO.File.WriteAllBytes("Resources//ImagenesMascota//" + nombreImagen + ".jpg", img);
+        }
+
         private void GuardarInteraccionConWatson(ClassifiedImages result, int idImagen)
         {
             this.consultasWatsonService.GuardarInteraccionConWatson(result, idImagen);
         }
+
+        
     }
 }
