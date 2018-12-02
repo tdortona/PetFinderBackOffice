@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PetFinderBackOffice.Models;
@@ -39,22 +40,27 @@ namespace PetFinderBackOffice.Services
             return img;
         }
 
-        public void GuardarFotoEnServidor(string imagenBase64, string nombreImagen, bool encontrado){
+        public async Task<HttpResponseMessage> GuardarFotoEnServidor(string imagenBase64, string nombreImagen, bool encontrado)
+        {
             HttpClient client = new HttpClient();
-            String uri = "http://criaderononthue.com/img/canfind/controllers/guardarImagenController.php";
-            if( encontrado )
+            string uri = "http://criaderononthue.com/img/canfind/controllers/guardarImagenController.php";
+
+            if(encontrado)
             {
                 uri = "http://criaderononthue.com/img/canfind/controllers/guardarImagenEncontradoController.php";
-            };
+            }
 
             var parametros = new ImagenAGuardar
             {
                 imagen64 = imagenBase64,
                 nameFile = nombreImagen
             };
-                //using System.Net.Http.Headers;
-            client.PostAsJsonAsync( uri, JsonConvert.SerializeObject(parametros));
 
+            var dataAsString = JsonConvert.SerializeObject(parametros);
+            var content = new StringContent(dataAsString);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var status = await client.PostAsync(uri, content);
+            return status;
         }
     }
 }

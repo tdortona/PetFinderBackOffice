@@ -41,7 +41,7 @@ namespace PetFinderBackOffice.Controllers
 
         // POST api/<controller>
         [HttpPost("/api/ImagenMascota/FotoEncontrado"), DisableRequestSizeLimit]
-        public IActionResult FotoEncontrado([FromBody]ImageFromServerModel imagenVM)
+        public async Task<IActionResult> FotoEncontrado([FromBody]ImageFromServerModel imagenVM)
         {
             if (!Directory.Exists(encontradosPath))
             {
@@ -53,7 +53,7 @@ namespace PetFinderBackOffice.Controllers
             var img = Convert.FromBase64String(imagenVM.ImageURI);
             System.IO.File.WriteAllBytes(encontradosPath + "//" + imageName + ".jpg", img);
 
-            this.imagenMascotaService.GuardarFotoEnServidor( imagenVM.ImageURI, imageName, true );
+            await this.imagenMascotaService.GuardarFotoEnServidor(imagenVM.ImageURI, imageName, true );
 
             imagenVM.Localizacion = "LOCALIZACION";
             int idImagen = this.imagenMascotaService.AddImagenMascotaEncontrada(imageName, imagenVM.Localizacion, imagenVM.IdUsuario);
