@@ -91,7 +91,7 @@ namespace PetFinderBackOffice.Controllers
 
         // POST api/<controller>
         [HttpPost("/api/ImagenMascota/AgregarFoto"), DisableRequestSizeLimit]
-        public void AgregarFoto([FromBody]ImageFromServerModel imagenVM)
+        public async Task<IActionResult> AgregarFoto([FromBody]ImageFromMascota imagenVM)
         {
             //Resources//Img//Mascotas//{idMascota}//...jpg
             if (!Directory.Exists("Resources//ImagenesMascota"))
@@ -99,11 +99,16 @@ namespace PetFinderBackOffice.Controllers
                 Directory.CreateDirectory("Resources//ImagenesMascota");
             }
 
-            long ahora = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            String nombreImagen = ahora.ToString(); 
+            string imageName = DateTime.Now.Ticks.ToString();
             
-            var img = Convert.FromBase64String(imagenVM.ImageURI);
-            System.IO.File.WriteAllBytes("Resources//ImagenesMascota//" + nombreImagen + ".jpg", img);
+            // var img = Convert.FromBase64String(imagenVM.ImageURI);
+            // System.IO.File.WriteAllBytes("Resources//ImagenesMascota//" + nombreImagen + ".jpg", img);
+
+            await this.imagenMascotaService.GuardarFotoEnServidor( imagenVM.ImageURI, imageName, false);
+
+            this.imagenMascotaService.AddImagenMascota(imageName, imagenVM.IdMascota, imagenVM.IdUsuario);
+
+            return this.Ok();
         }
 
         private void GuardarInteraccionConWatson(ClassifiedImages result, int idImagen)
@@ -111,6 +116,25 @@ namespace PetFinderBackOffice.Controllers
             this.consultasWatsonService.GuardarInteraccionConWatson(result, idImagen);
         }
 
+        // POST api/<controller>
+        [HttpPost("/api/ImagenMascota/TraerFotos"), DisableRequestSizeLimit]
+        public IActionResult TraerFotos([FromBody]int id)
+        {
+            
+            List<string> fotosArray = this.imagenMascotaService.TraerFotosMascota(id);
+            Console.WriteLine("========================");
+                Console.WriteLine(fotosArray.LongCount());
+            for(int i = 0; id < fotosArray.LongCount(); id++){
+                Console.WriteLine("========================");
+                Console.WriteLine(fotosArray[i]);
+            }
+            
+            // FotosMascota fotosMascota = new FotosMascota
+            // {
+            //     fotos = fotosArray
+            // };
+            return this.Ok(fotosArray);
+        }
         
     }
 }

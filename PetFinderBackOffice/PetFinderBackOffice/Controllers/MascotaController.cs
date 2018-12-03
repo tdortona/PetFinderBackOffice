@@ -27,7 +27,7 @@ namespace PetFinderBackOffice.Controllers
                 IdMascota = mascota.IdMascota,
                 Nombre = mascota.Nombre,
                 DescripcionRaza = mascotaService.TraeDescripcionRaza(mascota.IdRaza),
-                Avatar = "data:image/jpeg;base64," + this.imagenMascotaService.GetImagen(mascota.IdMascota, nombreImg),
+                Avatar = nombreImg,
                 Perdida = mascota.Perdida
             };
             return this.Ok(mascotaViewModel);
