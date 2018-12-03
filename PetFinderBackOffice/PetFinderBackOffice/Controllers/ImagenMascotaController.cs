@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 using IBM.WatsonDeveloperCloud.Util;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3.Model;
+using IBM.WatsonDeveloperCloud.Service;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -63,7 +65,6 @@ namespace PetFinderBackOffice.Controllers
             return this.Ok(res);
         }
         
-
         private string EnviarFotoAWatson(string path, int idImagen)
         {
             VisualRecognitionService visualRecognition = new VisualRecognitionService();
@@ -106,11 +107,32 @@ namespace PetFinderBackOffice.Controllers
             System.IO.File.WriteAllBytes("Resources//ImagenesMascota//" + nombreImagen + ".jpg", img);
         }
 
+        [HttpGet("/api/ImagenMascota/CrearClaseWatson")]
+        public IActionResult CrearClaseWatson()
+        {
+            VisualRecognitionService visualRecognition = new VisualRecognitionService();
+            
+            visualRecognition.SetEndpoint(endpoint);
+            visualRecognition.VersionDate = versionDate;
+            TokenOptions iamAssistantTokenOptions = new TokenOptions()
+            {
+                IamApiKey = apikey
+            };
+
+            visualRecognition.SetCredential(iamAssistantTokenOptions);
+            Dictionary<string, Stream> possitiveExamples = new Dictionary<string, Stream>();
+            FileStream img;
+            img = new FileStream("C:\\CanFind\\francisco2_positive_examples.zip", FileMode.Open);
+            possitiveExamples.Add("francisco2_positive_examples.zip", img);
+
+            var result = visualRecognition.UpdateClassifier(new UpdateClassifier("DogsBreed_2053415849", possitiveExamples, null), null);
+
+            return this.Ok();
+        }
+
         private void GuardarInteraccionConWatson(ClassifiedImages result, int idImagen)
         {
             this.consultasWatsonService.GuardarInteraccionConWatson(result, idImagen);
         }
-
-        
     }
 }
