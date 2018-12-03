@@ -143,12 +143,13 @@ namespace PetFinderBackOffice.Controllers
         // POST api/<controller>
         [HttpPost("/api/ImagenMascota/TraerFotos"), DisableRequestSizeLimit]
         public IActionResult TraerFotos([FromBody]int id)
-        {
-            
+        {   
             List<string> fotosArray = this.imagenMascotaService.TraerFotosMascota(id);
             Console.WriteLine("========================");
-                Console.WriteLine(fotosArray.LongCount());
-            for(int i = 0; id < fotosArray.LongCount(); id++){
+            Console.WriteLine(fotosArray.LongCount());
+
+            for(int i = 0; id < fotosArray.LongCount(); id++)
+            {
                 Console.WriteLine("========================");
                 Console.WriteLine(fotosArray[i]);
             }
@@ -159,6 +160,5 @@ namespace PetFinderBackOffice.Controllers
             // };
             return this.Ok(fotosArray);
         }
-        
     }
 }
