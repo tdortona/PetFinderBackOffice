@@ -47,11 +47,8 @@ namespace PetFinderBackOffice.Repositories
             return this.context.ImagenMascota.FirstOrDefault(x => x.IdImagen == id);
         }
 
-        public List<string> ListarFotos(int id){
-            // return this.context.ImagenMascota
-            // .Where(x => x.IdMascota == id)
-            // .Select(d => d.ImagenPath)
-            // .ToList();
+        public List<string> ListarFotos(int id)
+        {
             var fotos =
                 from imagenes in this.context.ImagenMascota
                 where imagenes.IdMascota == id

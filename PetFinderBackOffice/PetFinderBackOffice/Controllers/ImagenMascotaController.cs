@@ -31,6 +31,7 @@ namespace PetFinderBackOffice.Controllers
     {
         private readonly ConsultasWatsonService consultasWatsonService = new ConsultasWatsonService();
         private readonly ImagenMascotaService imagenMascotaService = new ImagenMascotaService();
+        private readonly LogErroresService logErroresService = new LogErroresService();
         private readonly string encontradosPath = AppContext.BaseDirectory + "Resources\\Img\\Mascotas\\Encontrados";
         private readonly string mascotasPath = AppContext.BaseDirectory + "Resources\\Img\\Mascotas\\";
         private const string versionDate = "2018-03-19";
@@ -45,24 +46,32 @@ namespace PetFinderBackOffice.Controllers
         [HttpPost("/api/ImagenMascota/FotoEncontrado"), DisableRequestSizeLimit]
         public async Task<IActionResult> FotoEncontrado([FromBody]ImageFromServerModel imagenVM)
         {
-            if (!Directory.Exists(encontradosPath))
+            try
             {
-                Directory.CreateDirectory(encontradosPath);
+                if (!Directory.Exists(encontradosPath))
+                {
+                    Directory.CreateDirectory(encontradosPath);
+                }
+
+                string imageName = DateTime.Now.Ticks.ToString();
+
+                var img = Convert.FromBase64String(imagenVM.ImageURI);
+                System.IO.File.WriteAllBytes(encontradosPath + "//" + imageName + ".jpg", img);
+
+                await this.imagenMascotaService.GuardarFotoEnServidor(imagenVM.ImageURI, imageName, true );
+
+                imagenVM.Localizacion = "LOCALIZACION";
+                int idImagen = this.imagenMascotaService.AddImagenMascotaEncontrada(imageName, imagenVM.Localizacion, imagenVM.IdUsuario);
+
+                var res = this.EnviarFotoAWatson(encontradosPath + "//" + imageName + ".jpg", idImagen);
+
+                return this.Ok(res);
             }
-
-            string imageName = DateTime.Now.Ticks.ToString();
-
-            var img = Convert.FromBase64String(imagenVM.ImageURI);
-            System.IO.File.WriteAllBytes(encontradosPath + "//" + imageName + ".jpg", img);
-
-            await this.imagenMascotaService.GuardarFotoEnServidor(imagenVM.ImageURI, imageName, true );
-
-            imagenVM.Localizacion = "LOCALIZACION";
-            int idImagen = this.imagenMascotaService.AddImagenMascotaEncontrada(imageName, imagenVM.Localizacion, imagenVM.IdUsuario);
-
-            var res = this.EnviarFotoAWatson(encontradosPath + "//" + imageName + ".jpg", idImagen);
-
-            return this.Ok(res);
+            catch (Exception e)
+            {
+                this.logErroresService.LogError(e.Message + " " + e.InnerException + " " + e.TargetSite + " " + this.GetType().ToString().Split('.')[2]);
+                throw;
+            }
         }
         
         private string EnviarFotoAWatson(string path, int idImagen)
@@ -94,22 +103,21 @@ namespace PetFinderBackOffice.Controllers
         [HttpPost("/api/ImagenMascota/AgregarFoto"), DisableRequestSizeLimit]
         public async Task<IActionResult> AgregarFoto([FromBody]ImageFromMascota imagenVM)
         {
-            //Resources//Img//Mascotas//{idMascota}//...jpg
-            if (!Directory.Exists("Resources//ImagenesMascota"))
+            try
             {
-                Directory.CreateDirectory("Resources//ImagenesMascota");
+                string imageName = DateTime.Now.Ticks.ToString();
+
+                await this.imagenMascotaService.GuardarFotoEnServidor(imagenVM.ImageURI, imageName, false);
+
+                this.imagenMascotaService.AddImagenMascota(imageName, imagenVM.IdMascota, imagenVM.IdUsuario);
+
+                return this.Ok();
             }
-
-            string imageName = DateTime.Now.Ticks.ToString();
-            
-            // var img = Convert.FromBase64String(imagenVM.ImageURI);
-            // System.IO.File.WriteAllBytes("Resources//ImagenesMascota//" + nombreImagen + ".jpg", img);
-
-            await this.imagenMascotaService.GuardarFotoEnServidor( imagenVM.ImageURI, imageName, false);
-
-            this.imagenMascotaService.AddImagenMascota(imageName, imagenVM.IdMascota, imagenVM.IdUsuario);
-
-            return this.Ok();
+            catch (Exception e)
+            {
+                this.logErroresService.LogError(e.Message + " " + e.InnerException + " " + e.TargetSite + " " + this.GetType().ToString().Split('.')[2]);
+                throw;
+            }
         }
 
         [HttpGet("/api/ImagenMascota/CrearClaseWatson")]
@@ -141,24 +149,20 @@ namespace PetFinderBackOffice.Controllers
         }
 
         // POST api/<controller>
-        [HttpPost("/api/ImagenMascota/TraerFotos"), DisableRequestSizeLimit]
-        public IActionResult TraerFotos([FromBody]int id)
-        {   
-            List<string> fotosArray = this.imagenMascotaService.TraerFotosMascota(id);
-            Console.WriteLine("========================");
-            Console.WriteLine(fotosArray.LongCount());
-
-            for(int i = 0; id < fotosArray.LongCount(); id++)
+        [HttpGet("/api/ImagenMascota/TraerFotos/{idMascota}"), DisableRequestSizeLimit]
+        public IActionResult TraerFotos(int idMascota)
+        {
+            try
             {
-                Console.WriteLine("========================");
-                Console.WriteLine(fotosArray[i]);
+                List<string> fotosArray = this.imagenMascotaService.TraerFotosMascota(idMascota);
+
+                return this.Ok(fotosArray);
             }
-            
-            // FotosMascota fotosMascota = new FotosMascota
-            // {
-            //     fotos = fotosArray
-            // };
-            return this.Ok(fotosArray);
+            catch (Exception e)
+            {
+                this.logErroresService.LogError(e.Message + " " + e.InnerException + " " + e.TargetSite + " " + this.GetType().ToString().Split('.')[2]);
+                throw;
+            }
         }
     }
 }

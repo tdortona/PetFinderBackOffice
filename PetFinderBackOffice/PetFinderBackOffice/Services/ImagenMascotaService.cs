@@ -68,7 +68,8 @@ namespace PetFinderBackOffice.Services
             return status;
         }
 
-        public List<string> TraerFotosMascota(int id){
+        public List<string> TraerFotosMascota(int id)
+        {
             return this.imagenMascotaRepository.ListarFotos(id);
         }
     }

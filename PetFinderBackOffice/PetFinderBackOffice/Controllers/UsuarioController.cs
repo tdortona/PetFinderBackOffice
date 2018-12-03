@@ -26,8 +26,16 @@ namespace PetFinderBackOffice.Controllers
         [HttpGet("{id}")]
         public IActionResult BuscaUsuarioPorId(string id)
         {
-            Usuario usuario = usuarioService.BuscaUsuarioPorId(id);
-            return this.Ok(usuario);
+            try
+            {
+                Usuario usuario = usuarioService.BuscaUsuarioPorId(id);
+                return this.Ok(usuario);
+            }
+            catch (Exception e)
+            {
+                this.logErroresService.LogError(e.Message + " " + e.InnerException + " " + e.TargetSite + " " + this.GetType().ToString().Split('.')[2]);
+                throw;
+            }
         }
 
         // GET: api/<controller>/TraerMisMascotas/{id}
@@ -60,7 +68,7 @@ namespace PetFinderBackOffice.Controllers
             }
             catch (Exception e)
             {
-                this.logErroresService.LogError(e.Message);
+                this.logErroresService.LogError(e.Message + " " + e.InnerException + " " + e.TargetSite + " " + this.GetType().ToString().Split('.')[2]);
                 throw;
             }
         }
@@ -69,33 +77,49 @@ namespace PetFinderBackOffice.Controllers
         [HttpPost("/api/Usuario/ValidarUsuario")]
         public IActionResult ValidarUsuario([FromBody]UsuarioViewModel rdUser)
         {
-            Usuario usuario = usuarioService.BuscaUsuarioPorId(rdUser.Id);
+            try
+            {
+                Usuario usuario = usuarioService.BuscaUsuarioPorId(rdUser.Id);
              
-            if(usuario != null)
-            {
-                return this.Ok(usuario);
+                if(usuario != null)
+                {
+                    return this.Ok(usuario);
+                }
+                else
+                {
+                    usuarioService.RegistrarUsuario(rdUser);
+                    usuario = usuarioService.BuscaUsuarioPorId(rdUser.Id);
+                    return this.Ok(usuario);
+                }
             }
-            else
+            catch (Exception e)
             {
-                usuarioService.RegistrarUsuario(rdUser);
-                usuario = usuarioService.BuscaUsuarioPorId(rdUser.Id);
-                return this.Ok(usuario);
+                this.logErroresService.LogError(e.Message + " " + e.InnerException + " " + e.TargetSite + " " + this.GetType().ToString().Split('.')[2]);
+                throw;
             }
         }
 
         [HttpGet("/api/Usuario/GetUsuarioContacto/{idUsuario}")]
         public IActionResult GetUsuarioContacto(int idUsuario)
         {
-            var us = this.usuarioService.GetUsuarioContacto(idUsuario);
-
-            ContactarUsuarioViewModel usVM = new ContactarUsuarioViewModel
+            try
             {
-                Email = us.Email,
-                Nombre = us.Nombre,
-                TelefonoContacto = us.TelefonoContacto
-            };
+                var us = this.usuarioService.GetUsuarioContacto(idUsuario);
 
-            return this.Ok(usVM);
+                ContactarUsuarioViewModel usVM = new ContactarUsuarioViewModel
+                {
+                    Email = us.Email,
+                    Nombre = us.Nombre,
+                    TelefonoContacto = us.TelefonoContacto
+                };
+
+                return this.Ok(usVM);
+            }
+            catch (Exception e)
+            {
+                this.logErroresService.LogError(e.Message + " " + e.InnerException + " " + e.TargetSite + " " + this.GetType().ToString().Split('.')[2]);
+                throw;
+            }
         }
     }
 }
