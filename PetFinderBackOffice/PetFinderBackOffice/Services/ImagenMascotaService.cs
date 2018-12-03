@@ -22,23 +22,28 @@ namespace PetFinderBackOffice.Services
             return this.imagenMascotaRepository.AddImagenMascotaEncontrada(path, localizacion, idUsuario);
         }
 
+        public void AddImagenMascota(string path, int idMascota, int idUsuario)
+        {
+            this.imagenMascotaRepository.AddImagenMascota(path, idMascota, idUsuario);
+        }
+
         public ImagenMascota GetImagenMascota(int id)
         {
             return this.imagenMascotaRepository.GetImagenMascota(id);
         }
 
-        public string GetImagen(int idMascota, string nombreFoto)
-        {
-            var physicalPath = idMascota != 0 ?
-                mascotasPath + idMascota + "//" + nombreFoto + ".jpg" :
-                encontradosPath + "//" + nombreFoto + ".jpg";
+        // public string GetImagen(int idMascota, string nombreFoto)
+        // {
+        //     var physicalPath = idMascota != 0 ?
+        //         mascotasPath + idMascota + "//" + nombreFoto + ".jpg" :
+        //         encontradosPath + "//" + nombreFoto + ".jpg";
 
-            var imgB = System.IO.File.ReadAllBytes(physicalPath);
+        //     var imgB = System.IO.File.ReadAllBytes(physicalPath);
 
-            var img = Convert.ToBase64String(imgB);
+        //     var img = Convert.ToBase64String(imgB);
 
-            return img;
-        }
+        //     return img;
+        // }
 
         public async Task<HttpResponseMessage> GuardarFotoEnServidor(string imagenBase64, string nombreImagen, bool encontrado)
         {
@@ -61,6 +66,10 @@ namespace PetFinderBackOffice.Services
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             var status = await client.PostAsync(uri, content);
             return status;
+        }
+
+        public List<string> TraerFotosMascota(int id){
+            return this.imagenMascotaRepository.ListarFotos(id);
         }
     }
 }

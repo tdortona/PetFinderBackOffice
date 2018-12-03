@@ -27,9 +27,37 @@ namespace PetFinderBackOffice.Repositories
             return imagenMascota.IdImagen;
         }
 
+        public void AddImagenMascota(string path, int idMascota, int idUsuario)
+        {
+            ImagenMascota imagenMascota = new ImagenMascota
+            {
+                IdMascota = idMascota,
+                IdUsuario = idUsuario,
+                ImagenPath = path,
+                Localizacion = string.Empty
+            };
+
+            this.context.ImagenMascota.Add(imagenMascota);
+
+            this.context.SaveChanges();
+        }
+
         public ImagenMascota GetImagenMascota(int id)
         {
             return this.context.ImagenMascota.FirstOrDefault(x => x.IdImagen == id);
+        }
+
+        public List<string> ListarFotos(int id){
+            // return this.context.ImagenMascota
+            // .Where(x => x.IdMascota == id)
+            // .Select(d => d.ImagenPath)
+            // .ToList();
+            var fotos =
+                from imagenes in this.context.ImagenMascota
+                where imagenes.IdMascota == id
+                select imagenes.ImagenPath;
+
+            return fotos.ToList();
         }
     }
 }

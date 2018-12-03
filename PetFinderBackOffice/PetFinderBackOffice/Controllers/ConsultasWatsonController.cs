@@ -36,7 +36,7 @@ namespace PetFinderBackOffice.Controllers
                 resultados.Add(new ResultadoBusqueda()
                 {
                     Clase = item.Clase,
-                    Imagen = "data:image/jpeg;base64," + this.imagenMascotaService.GetImagen(img.IdMascota.Value, img.ImagenPath),
+                    Imagen =  img.ImagenPath,
                     Score = item.Score.Value,
                     IdUsuario = img.IdUsuario
                 });

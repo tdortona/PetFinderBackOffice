@@ -27,7 +27,7 @@ namespace PetFinderBackOffice.Controllers
                 IdMascota = mascota.IdMascota,
                 Nombre = mascota.Nombre,
                 DescripcionRaza = mascotaService.TraeDescripcionRaza(mascota.IdRaza),
-                Avatar = "data:image/jpeg;base64," + this.imagenMascotaService.GetImagen(mascota.IdMascota, nombreImg),
+                Avatar = nombreImg,
                 Perdida = mascota.Perdida
             };
             return this.Ok(mascotaViewModel);
@@ -47,6 +47,29 @@ namespace PetFinderBackOffice.Controllers
         {
             mascotaService.ReportarEncontrada(mascota.IdMascota);
             return this.Ok();
+        }
+
+        // POST: api/<controller>/AgregarMascotaNueva
+        [HttpPost("/api/Mascota/AgregarMascotaNueva")]
+        public IActionResult AgregarMascotaNueva([FromBody] MascotaNuevaViewModel mascota)
+        {
+            Mascota mascotaNueva = new Mascota
+            {
+                IdUsuario = mascota.IdUsuario,
+                Nombre = mascota.Nombre,
+                IdRaza = mascota.IdRaza
+            };
+            mascotaService.AgregarMascotaNueva(mascotaNueva);
+            return this.Ok();
+        }
+
+        // GET: api/<controller>/TraerRazas
+        [HttpGet("/api/Mascota/TraerRazas")]
+        public IActionResult TraerRazas()
+        {
+            List<Raza> listaRazas = new List<Raza>();
+            listaRazas = mascotaService.TraerRazas();
+            return this.Ok(listaRazas);
         }
     }
 }

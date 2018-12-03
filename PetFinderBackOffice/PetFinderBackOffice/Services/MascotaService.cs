@@ -35,5 +35,15 @@ namespace PetFinderBackOffice.Services
         {
             mascotaRepository.ReportarEncontrada(IdMascota);
         }
+
+        public void AgregarMascotaNueva(Mascota mascota)
+        {
+            mascotaRepository.AgregarMascotaNueva(mascota);
+        }
+
+        public List<Raza> TraerRazas()
+        {
+            return mascotaRepository.TraerRazas();
+        }
     }
 }
