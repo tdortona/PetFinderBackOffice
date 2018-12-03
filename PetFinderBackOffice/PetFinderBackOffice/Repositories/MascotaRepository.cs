@@ -45,5 +45,17 @@ namespace PetFinderBackOffice.Repositories
             mascotaBuscada.Perdida = false;
             this.context.SaveChanges();
         }
+
+        public void AgregarMascotaNueva(Mascota mascota)
+        {
+            mascota.Perdida = false;
+            this.context.Mascota.Add(mascota);
+            this.context.SaveChanges();
+        }
+
+        public List<Raza> TraerRazas()
+        {
+            return this.context.Raza.ToList();
+        }
     }
 }
