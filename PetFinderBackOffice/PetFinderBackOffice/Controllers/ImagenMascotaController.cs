@@ -111,6 +111,12 @@ namespace PetFinderBackOffice.Controllers
 
                 this.imagenMascotaService.AddImagenMascota(imageName, imagenVM.IdMascota, imagenVM.IdUsuario);
 
+                List<string> totalFotosMascota = this.imagenMascotaService.TraerFotosMascota(imagenVM.IdMascota);
+                if( totalFotosMascota.Count() == 10 ){
+                    //crearClaseWatson
+                    int algo = 1;
+                }
+
                 return this.Ok();
             }
             catch (Exception e)
@@ -148,7 +154,7 @@ namespace PetFinderBackOffice.Controllers
             this.consultasWatsonService.GuardarInteraccionConWatson(result, idImagen);
         }
 
-        // POST api/<controller>
+        // GET api/<controller>
         [HttpGet("/api/ImagenMascota/TraerFotos/{idMascota}"), DisableRequestSizeLimit]
         public IActionResult TraerFotos(int idMascota)
         {
