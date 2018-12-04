@@ -60,7 +60,6 @@ namespace PetFinderBackOffice.Controllers
 
                 await this.imagenMascotaService.GuardarFotoEnServidor(imagenVM.ImageURI, imageName, true );
 
-                imagenVM.Localizacion = "LOCALIZACION";
                 int idImagen = this.imagenMascotaService.AddImagenMascotaEncontrada(imageName, imagenVM.Localizacion, imagenVM.IdUsuario);
 
                 var res = this.EnviarFotoAWatson(encontradosPath + "//" + imageName + ".jpg", idImagen);
