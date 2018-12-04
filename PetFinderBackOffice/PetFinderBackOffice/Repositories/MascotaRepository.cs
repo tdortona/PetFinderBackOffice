@@ -55,7 +55,7 @@ namespace PetFinderBackOffice.Repositories
 
         public List<Raza> TraerRazas()
         {
-            return this.context.Raza.ToList();
+            return this.context.Raza.Where(x => x.Descripcion != "Encontrado").ToList();
         }
     }
 }

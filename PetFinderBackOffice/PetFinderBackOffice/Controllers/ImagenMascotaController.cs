@@ -34,6 +34,7 @@ namespace PetFinderBackOffice.Controllers
         private readonly LogErroresService logErroresService = new LogErroresService();
         private readonly string encontradosPath = AppContext.BaseDirectory + "Resources\\Img\\Mascotas\\Encontrados";
         private readonly string mascotasPath = AppContext.BaseDirectory + "Resources\\Img\\Mascotas\\";
+        private readonly string nuevasClasesPath = AppContext.BaseDirectory;
         private const string versionDate = "2018-03-19";
         private const string apikey = "HY_-KRN409tGl3X4Yp3zrbVxKpLGugfZ5HPr2gsCGMiC";
         private const string endpoint = "https://gateway.watsonplatform.net/visual-recognition/api";
@@ -119,27 +120,99 @@ namespace PetFinderBackOffice.Controllers
             }
         }
 
-        [HttpGet("/api/ImagenMascota/CrearClaseWatson")]
-        public IActionResult CrearClaseWatson()
+        [HttpPost("/api/ImagenMascota/CrearClaseWatson")]
+        public async Task<IActionResult> CrearClaseWatson([FromBody]CrearClaseWatsonViewModel imagenes)
         {
-            VisualRecognitionService visualRecognition = new VisualRecognitionService();
-            
-            visualRecognition.SetEndpoint(endpoint);
-            visualRecognition.VersionDate = versionDate;
-            TokenOptions iamAssistantTokenOptions = new TokenOptions()
+            try
             {
-                IamApiKey = apikey
-            };
+                VisualRecognitionService visualRecognition = new VisualRecognitionService();
+                visualRecognition.SetEndpoint(endpoint);
+                visualRecognition.VersionDate = versionDate;
+                TokenOptions iamAssistantTokenOptions = new TokenOptions()
+                {
+                    IamApiKey = apikey
+                };
+                visualRecognition.SetCredential(iamAssistantTokenOptions);
 
-            visualRecognition.SetCredential(iamAssistantTokenOptions);
-            Dictionary<string, Stream> possitiveExamples = new Dictionary<string, Stream>();
-            FileStream img;
-            img = new FileStream("C:\\CanFind\\francisco2_positive_examples.zip", FileMode.Open);
-            possitiveExamples.Add("francisco2_positive_examples.zip", img);
+                string zipPath = await this.GetImagesByteArrays(imagenes.IdMascota, imagenes.NombreMascota, imagenes.ImagesUris);
 
-            var result = visualRecognition.UpdateClassifier(new UpdateClassifier("DogsBreed_2053415849", possitiveExamples, null), null);
+                Dictionary<string, Stream> possitiveExamples = new Dictionary<string, Stream>();
+                FileStream zipFileStream;
+                zipFileStream = new FileStream(zipPath, FileMode.Open);
+                possitiveExamples.Add(imagenes.IdMascota + "_" + imagenes.NombreMascota, zipFileStream);
 
-            return this.Ok();
+                var result = visualRecognition.UpdateClassifier(new UpdateClassifier("DogsBreed_2053415849", possitiveExamples, null), null);
+
+                return this.Ok();
+            }
+            catch (Exception e)
+            {
+                this.logErroresService.LogError(e.Message + " " + e.InnerException + " " + e.TargetSite + " " + this.GetType().ToString().Split('.')[2]);
+                throw;
+            }
+        }
+
+        private async Task<string> GetImagesByteArrays(int idMascota, string nombreMascota, List<string> imageUris)
+        {
+            List<byte[]> fileBytes = new List<byte[]>();
+            byte[] file;
+
+            using (var client = new HttpClient())
+            {
+                foreach (var item in imageUris)
+                {
+                    using (var asd = await client.GetAsync(item))
+                    {
+                        if (asd.IsSuccessStatusCode)
+                        {
+                            file = await asd.Content.ReadAsByteArrayAsync();
+                            fileBytes.Add(file);
+                        }
+                    }
+                }
+            }
+
+            return this.WriteImagesBytes(idMascota, nombreMascota, fileBytes);
+        }
+
+        private string WriteImagesBytes(int idMascota, string nombreMascota, List<byte[]> fileBytes)
+        {
+            int i = 0;
+            string path = nuevasClasesPath + "//" + idMascota.ToString() + " - " + nombreMascota;
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            foreach (var item in fileBytes)
+            {
+                System.IO.File.WriteAllBytes(path + "//" + i.ToString() + ".jpg", item);
+                i++;
+            }
+
+            return this.GetZipFromFiles(path, idMascota, nombreMascota);
+        }
+
+        private string GetZipFromFiles(string path, int idMascota, string nombreMascota)
+        {
+            try
+            {
+                string newFolderPath = nuevasClasesPath + "//" + idMascota.ToString() + " - " + nombreMascota + " - ArchivoZip";
+                if (!Directory.Exists(newFolderPath))
+                {
+                    Directory.CreateDirectory(newFolderPath);
+                }
+
+                string filePath = newFolderPath + "//" + nombreMascota + "_positive_examples.zip";
+                ZipFile.CreateFromDirectory(path, filePath);
+                return filePath;
+            }
+            catch (Exception e)
+            {
+                this.logErroresService.LogError(e.Message + " " + e.InnerException + " " + e.TargetSite + " " + this.GetType().ToString().Split('.')[2]);
+                throw;
+            }
         }
 
         private void GuardarInteraccionConWatson(ClassifiedImages result, int idImagen)
