@@ -24,14 +24,15 @@ namespace PetFinderBackOffice.Controllers
             {
                 Mascota mascota = mascotaService.TraerMascota(id);
                 string nombreImg = mascotaService.TraerAvatarMascota(mascota.IdMascota);
-
+                List<string> totalfotosDeMascota = imagenMascotaService.TraerFotosMascota(mascota.IdMascota);
                 MascotaViewModel mascotaViewModel = new MascotaViewModel
                 {
                     IdMascota = mascota.IdMascota,
                     Nombre = mascota.Nombre,
                     DescripcionRaza = mascotaService.TraeDescripcionRaza(mascota.IdRaza),
                     Avatar = nombreImg,
-                    Perdida = mascota.Perdida
+                    Perdida = mascota.Perdida,
+                    Entrenado = totalfotosDeMascota.Count()
                 };
 
                 return this.Ok(mascotaViewModel);

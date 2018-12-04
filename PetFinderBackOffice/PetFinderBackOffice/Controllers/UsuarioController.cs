@@ -47,13 +47,14 @@ namespace PetFinderBackOffice.Controllers
                 List<Mascota> misMascotas  = new List<Mascota>();
                 List<MascotaViewModel> misMascotasViewModel = new List<MascotaViewModel>();
                 string nombreImg;
+                List<string> totalDeFotosMascota;
                 misMascotas = usuarioService.TraerMisMascotas(id);
 
                 foreach (Mascota mascota in misMascotas)
                 {
 
                     nombreImg = mascotaService.TraerAvatarMascota(mascota.IdMascota);
-
+                    totalDeFotosMascota = imagenMascotaService.TraerFotosMascota(mascota.IdMascota);
                     misMascotasViewModel.Add(new MascotaViewModel()
                     {
                         IdMascota = mascota.IdMascota,
@@ -61,7 +62,8 @@ namespace PetFinderBackOffice.Controllers
                         Nombre = mascota.Nombre,
                         Perdida = mascota.Perdida,
                         Avatar =  nombreImg,
-                        DescripcionRaza = mascotaService.TraeDescripcionRaza(mascota.IdRaza)                    
+                        DescripcionRaza = mascotaService.TraeDescripcionRaza(mascota.IdRaza),
+                        Entrenado = totalDeFotosMascota.Count()
                     });
                 }
                 return this.Ok(misMascotasViewModel);
