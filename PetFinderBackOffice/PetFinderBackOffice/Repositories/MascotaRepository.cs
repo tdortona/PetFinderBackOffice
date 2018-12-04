@@ -57,5 +57,12 @@ namespace PetFinderBackOffice.Repositories
         {
             return this.context.Raza.Where(x => x.Descripcion != "Encontrado").ToList();
         }
+
+        public void SetEntrenada(int idMascota)
+        {
+            Mascota mascota = this.context.Mascota.FirstOrDefault(x => x.IdMascota == idMascota);
+            mascota.Entrenada = true;
+            this.context.SaveChanges();
+        }
     }
 }

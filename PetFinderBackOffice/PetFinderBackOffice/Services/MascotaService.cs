@@ -45,5 +45,10 @@ namespace PetFinderBackOffice.Services
         {
             return mascotaRepository.TraerRazas();
         }
+
+        public void SetEntrenada(int idMascota)
+        {
+            this.mascotaRepository.SetEntrenada(idMascota);
+        }
     }
 }

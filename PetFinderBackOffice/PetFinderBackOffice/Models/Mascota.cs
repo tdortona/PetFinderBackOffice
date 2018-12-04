@@ -15,6 +15,7 @@ namespace PetFinderBackOffice.Models
         public int IdRaza { get; set; }
         public string Nombre { get; set; }
         public bool Perdida { get; set; }
+        public bool Entrenada { get; set; }
 
         public Raza IdRazaNavigation { get; set; }
         public Usuario IdUsuarioNavigation { get; set; }

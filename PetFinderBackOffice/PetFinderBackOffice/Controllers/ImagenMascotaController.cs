@@ -31,6 +31,7 @@ namespace PetFinderBackOffice.Controllers
     {
         private readonly ConsultasWatsonService consultasWatsonService = new ConsultasWatsonService();
         private readonly ImagenMascotaService imagenMascotaService = new ImagenMascotaService();
+        private readonly MascotaService mascotaService = new MascotaService();
         private readonly LogErroresService logErroresService = new LogErroresService();
         private readonly string encontradosPath = AppContext.BaseDirectory + "Resources\\Img\\Mascotas\\Encontrados";
         private readonly string mascotasPath = AppContext.BaseDirectory + "Resources\\Img\\Mascotas\\";
@@ -111,12 +112,6 @@ namespace PetFinderBackOffice.Controllers
 
                 this.imagenMascotaService.AddImagenMascota(imageName, imagenVM.IdMascota, imagenVM.IdUsuario);
 
-                List<string> totalFotosMascota = this.imagenMascotaService.TraerFotosMascota(imagenVM.IdMascota);
-                if( totalFotosMascota.Count() == 10 ){
-                    //crearClaseWatson
-                    int algo = 1;
-                }
-
                 return this.Ok();
             }
             catch (Exception e)
@@ -148,6 +143,13 @@ namespace PetFinderBackOffice.Controllers
                 possitiveExamples.Add(imagenes.IdMascota + "_" + imagenes.NombreMascota, zipFileStream);
 
                 var result = visualRecognition.UpdateClassifier(new UpdateClassifier("DogsBreed_2053415849", possitiveExamples, null), null);
+
+                zipFileStream.Close();
+
+                if (result.Status == Classifier.StatusEnum.RETRAINING)
+                {
+                    this.mascotaService.SetEntrenada(imagenes.IdMascota);
+                }
 
                 return this.Ok();
             }

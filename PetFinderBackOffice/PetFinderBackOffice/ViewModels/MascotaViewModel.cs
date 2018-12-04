@@ -22,5 +22,7 @@ namespace PetFinderBackOffice.ViewModels
         public string Avatar { get; set; }
 
         public int Entrenado  { get; set; }
+
+        public bool ClaseEntrenada { get; set; }
     }
 }

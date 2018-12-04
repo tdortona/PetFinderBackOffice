@@ -32,7 +32,8 @@ namespace PetFinderBackOffice.Controllers
                     DescripcionRaza = mascotaService.TraeDescripcionRaza(mascota.IdRaza),
                     Avatar = nombreImg,
                     Perdida = mascota.Perdida,
-                    Entrenado = totalfotosDeMascota.Count()
+                    Entrenado = totalfotosDeMascota.Count(),
+                    ClaseEntrenada = mascota.Entrenada
                 };
 
                 return this.Ok(mascotaViewModel);
@@ -86,7 +87,8 @@ namespace PetFinderBackOffice.Controllers
                 {
                     IdUsuario = mascota.IdUsuario,
                     Nombre = mascota.Nombre,
-                    IdRaza = mascota.IdRaza
+                    IdRaza = mascota.IdRaza,
+                    Entrenada = false
                 };
 
                 mascotaService.AgregarMascotaNueva(mascotaNueva);
