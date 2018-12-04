@@ -41,7 +41,8 @@ namespace PetFinderBackOffice.Controllers
                         Clase = item.Clase,
                         Imagen =  img.ImagenPath,
                         Score = item.Score.Value,
-                        IdUsuario = img.IdUsuario
+                        IdUsuario = img.IdUsuario,
+                        Localizacion = img.Localizacion
                     });
                 }
 

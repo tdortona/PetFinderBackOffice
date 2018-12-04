@@ -14,5 +14,7 @@ namespace PetFinderBackOffice.ViewModels
         public float Score { get; set; }
 
         public string Imagen { get; set; }
+
+        public string Localizacion { get; set; }
     }
 }
