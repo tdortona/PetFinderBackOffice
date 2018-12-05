@@ -41,7 +41,10 @@ namespace PetFinderBackOffice.Repositories
                 consultasRaza = consultas.Where(x => !string.IsNullOrWhiteSpace(x.Clase) && x.Clase.ToLower().Contains(claseRaza.ToLower())).ToList();
             }
 
-            consultas = consultasNombre.Concat(consultasRaza).Distinct().ToList();
+            if (consultasNombre.Count > 0 || consultasRaza.Count > 0)
+            {
+                consultas = consultasNombre.Concat(consultasRaza).Distinct().ToList();
+            }
 
             return consultas.Where(x => x.Score.HasValue && x.Score >= score).ToList();
         }
