@@ -28,16 +28,20 @@ namespace PetFinderBackOffice.Repositories
         public List<ConsultasWatson> ConsultarEncontrados(string claseNombre, string claseRaza, int score)
         {
             var consultas = this.context.ConsultasWatson.ToList();
+            List<ConsultasWatson> consultasNombre = new List<ConsultasWatson>();
+            List<ConsultasWatson> consultasRaza = new List<ConsultasWatson>();
 
             if (!string.IsNullOrWhiteSpace(claseNombre))
             {
-                consultas = consultas.Where(x => !string.IsNullOrWhiteSpace(x.Clase) && x.Clase.ToLower() == claseNombre.ToLower()).ToList();
+                consultasNombre = consultas.Where(x => !string.IsNullOrWhiteSpace(x.Clase) && x.Clase.ToLower().Contains(claseNombre.ToLower())).ToList();
             }
 
             if (!string.IsNullOrWhiteSpace(claseRaza))
             {
-                consultas = consultas.Where(x => !string.IsNullOrWhiteSpace(x.Clase) && x.Clase.ToLower() == claseRaza.ToLower()).ToList();
+                consultasRaza = consultas.Where(x => !string.IsNullOrWhiteSpace(x.Clase) && x.Clase.ToLower().Contains(claseRaza.ToLower())).ToList();
             }
+
+            consultas = consultasNombre.Concat(consultasRaza).Distinct().ToList();
 
             return consultas.Where(x => x.Score.HasValue && x.Score >= score).ToList();
         }
